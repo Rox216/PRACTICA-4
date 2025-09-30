@@ -81,8 +81,9 @@ def main(pagina: ft.Page):
     tecla_a_nota = {}
     for n in NOTAS:
         for t in n["teclas"]:
-            tecla_a_nota[normalizar_tecla(t)] = {"nombre", n["nombre"], "mosrtrar", n["mostrar"]}
-            
+            tecla_a_nota[normalizar_tecla(t)] = {"nombre": n["nombre"], "mostrar": n["mostrar"]}
+
+    # Un reproductor de audio por nota, agregado al overlay de la página
     nombre_a_audio = {}
     for nombre, urls in RECURSOS.items():
         reproductor = Audio(src=urls["wav"])
@@ -93,10 +94,10 @@ def main(pagina: ft.Page):
         tecla_norm = normalizar_tecla(evento.key)
         nota_info = tecla_a_nota.get(tecla_norm)
         if not nota_info:
-            return
+            return  # tecla no mapeada
         nombre_nota = nota_info["nombre"]
         texto_mostrar = nota_info["mostrar"]
-        
+
         reproductor = nombre_a_audio.get(nombre_nota)
         if reproductor:
             reproductor.play()
@@ -105,9 +106,8 @@ def main(pagina: ft.Page):
                 nombre_nota, texto_mostrar,
                 RECURSOS, TECLADO_BASE
             )
-                
+
     pagina.on_keyboard_event = al_presionar_tecla
     pagina.update()
-    
     
 ft.app(target=main)
